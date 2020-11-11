@@ -125,10 +125,12 @@ open class DynamicBlurView: UIView {
 extension DynamicBlurView {
     open override func display(_ layer: CALayer) {
         if let blurredImage = (staticImage ?? currentImage()).flatMap(imageBlurred) {
-            blurLayer.draw(blurredImage)
+            let usedImage = (layer.cornerRadius > 0 ? blurredImage.withRoundedCorners(radius: layer.cornerRadius) : blurredImage) ?? UIImage()
+                
+            blurLayer.draw(usedImage)
 
             if isDeepRendering {
-                blurLayer.contentsRect = relativeLayerRect.rectangle(blurredImage.size)
+                blurLayer.contentsRect = relativeLayerRect.rectangle(usedImage.size)
             }
         }
     }
